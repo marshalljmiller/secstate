@@ -1,0 +1,38 @@
+man(1)                             SecState                             man(1)
+
+
+
+NNAAMMEE
+       Security State Tool
+
+SSYYNNOOPPSSIISS
+       secstate <sub-command> [options] <target>
+
+DDEESSCCRRIIPPTTIIOONN
+       SecState  is  a  Security Configuration tool that utilizes openscap and
+       puppet to configure and validate security configuration information  on
+       a  target  system.  SecState targets U.S. federal regulations and guid-
+       ance, but can be used with any SCAP compliant content.
+
+OOPPTTIIOONNSS
+       Sub-commands:
+           import          --  Validates and imports a benchmark and its asso-
+       ciated oval into the system
+           select          --  Sets a portion of the benchmark (group/rule) to
+       be selected
+           deselect        --  Sets a portion of the benchmark (group/rule) to
+       be deselected
+           list            --  List the imported benchmarks
+           show             --  Shows the information associated with a group,
+       rule, or definition id
+           search          --  Search through imported content
+           remediate       --  FIXME -- Remediate issues.
+           audit           --  Audit the  local  system  based  the  specified
+       benchmark
+
+AAUUTTHHOORR
+       Marshall Miller <mmiller@tresys.com>
+
+
+
+Linux                             7 July 2010                           man(1)

@@ -1,0 +1,83 @@
+<oval_definitions xmlns="http://oval.mitre.org/XMLSchema/oval-definitions-5" xsi:schemaLocation="http://oval.mitre.org/XMLSchema/oval-definitions-5#unix unix-definitions-schema.xsd http://oval.mitre.org/XMLSchema/oval-definitions-5#linux linux-definitions-schema.xsd http://oval.mitre.org/XMLSchema/oval-definitions-5#independent independent-definitions-schema.xsd http://oval.mitre.org/XMLSchema/oval-definitions-5 oval-definitions-schema.xsd http://oval.mitre.org/XMLSchema/oval-common-5 oval-common-schema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <generator>
+        <product_name xmlns="http://oval.mitre.org/XMLSchema/oval-common-5">squashed circle</product_name>
+        <product_version xmlns="http://oval.mitre.org/XMLSchema/oval-common-5">0.5</product_version>
+        <schema_version xmlns="http://oval.mitre.org/XMLSchema/oval-common-5">5.6</schema_version>
+        <timestamp xmlns="http://oval.mitre.org/XMLSchema/oval-common-5">2010-07-14T15:18:22</timestamp>
+    </generator>
+    <definitions>
+        <definition class="compliance" id="oval:com.tresys.oval.rhel:def:1294" version="1">
+            <metadata>
+                <title>Users have home directories</title>
+                <description>Ensure users in /etc/passwd have a home directory</description>
+                <reference ref_id="GEN001440" source="STIG" />
+                <affected family="unix">
+                    <platform>Red Hat Enterprise Linux 5</platform>
+                </affected>
+            </metadata>
+            <criteria comment="/etc/passwd users have a home directory" operator="AND">
+                <criterion test_ref="oval:com.tresys.oval.rhel:tst:1295" />
+            </criteria>
+        </definition>
+        <definition class="compliance" id="oval:com.tresys.oval.rhel:def:1296" version="1">
+            <metadata>
+                <title>All Users Home Dir Exists</title>
+                <description>Ensure that all users' home directories exist.</description>
+                <reference ref_id="GEN001460" source="UNIX STIG" />
+                <affected family="unix">
+                    <platform>Red Hat Enterprise Linux 5</platform>
+                </affected>
+            </metadata>
+            <criteria operator="AND">
+                <criterion test_ref="oval:com.tresys.oval.rhel:tst:1297" />
+            </criteria>
+        </definition>
+    </definitions>
+    <tests>
+        <password_test check="all" comment="/etc/passwd users have a home directory" id="oval:com.tresys.oval.rhel:tst:1295" version="1" xmlns="http://oval.mitre.org/XMLSchema/oval-definitions-5#unix">
+            <object object_ref="oval:com.tresys.oval.rhel:obj:1295" />
+            <state state_ref="oval:com.tresys.oval.rhel:ste:1295" />
+        </password_test>
+        <password_test check="all" check_existence="none_exist" comment="User home dir exists" id="oval:com.tresys.oval.rhel:tst:1297" version="1" xmlns="http://oval.mitre.org/XMLSchema/oval-definitions-5#unix">
+            <object object_ref="oval:com.tresys.oval.rhel:obj:1297" />
+        </password_test>
+    </tests>
+    <objects>
+        <password_object id="oval:com.tresys.oval.rhel:obj:1295" version="1" xmlns="http://oval.mitre.org/XMLSchema/oval-definitions-5#unix">
+            <username operation="pattern match">.+</username>
+        </password_object>
+        <password_object id="oval:com.tresys.oval.rhel:obj:1297" version="1" xmlns="http://oval.mitre.org/XMLSchema/oval-definitions-5#unix">
+            <set xmlns="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+                <object_reference>oval:com.tresys.oval.rhel:obj:1017</object_reference>
+                <filter>oval:com.tresys.oval.rhel:ste:1298</filter>
+            </set>
+        </password_object>
+        <password_object id="oval:com.tresys.oval.rhel:obj:1017" version="1" xmlns="http://oval.mitre.org/XMLSchema/oval-definitions-5#unix">
+            <username operation="pattern match">.+</username>
+        </password_object>
+        <file_object id="oval:com.tresys.oval.rhel:obj:1299" version="1" xmlns="http://oval.mitre.org/XMLSchema/oval-definitions-5#unix">
+            <path operation="equals" var_ref="oval:com.tresys.oval.rhel:var:1300" />
+            <filename xsi:nil="true" />
+        </file_object>
+    </objects>
+    <states>
+        <password_state id="oval:com.tresys.oval.rhel:ste:1295" version="1" xmlns="http://oval.mitre.org/XMLSchema/oval-definitions-5#unix">
+            <home_dir operation="pattern match">.+</home_dir>
+        </password_state>
+        <password_state id="oval:com.tresys.oval.rhel:ste:1298" version="1" xmlns="http://oval.mitre.org/XMLSchema/oval-definitions-5#unix">
+            <home_dir operation="pattern match" var_check="at least one" var_ref="oval:com.tresys.oval.rhel:var:1301" />
+        </password_state>
+    </states>
+    <variables>
+        <local_variable comment="Contains all users&apos; home directories that exist" datatype="string" id="oval:com.tresys.oval.rhel:var:1301" version="1">
+            <concat>
+                <literal_component>^</literal_component>
+                <object_component item_field="path" object_ref="oval:com.tresys.oval.rhel:obj:1299" />
+                <literal_component>?$</literal_component>
+            </concat>
+        </local_variable>
+        <local_variable comment="Contains the users&apos; home directory path" datatype="string" id="oval:com.tresys.oval.rhel:var:1300" version="1">
+            <object_component item_field="home_dir" object_ref="oval:com.tresys.oval.rhel:obj:1017" />
+        </local_variable>
+    </variables>
+</oval_definitions>
