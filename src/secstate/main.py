@@ -158,10 +158,13 @@ class Secstate:
         if def_model == None:
             self.log.error("Error importing OVAL content: %(file)s" % {'file':oval_file})
             return None
+        self.log.info("imported oval file %s" % (oval_file,))
 
+        '''
         if not def_model.is_valid():
             self.log.error("Definition model is invalid")
             return None
+        '''
 
         oval_id = os.path.splitext(os.path.basename(oval_file))[0]
         def_model.__dict__['id'] = oval_id
@@ -225,7 +228,7 @@ class Secstate:
             oval_file = os.path.join(oval_path, oval)
             def_model = self.import_oval(oval_file)
             if def_model == None:
-                return None
+                continue
             benchmark.__dict__['oval'][oval] = def_model
 
         profile = oscap.xccdf.profile_new()
@@ -258,11 +261,21 @@ class Secstate:
 
         current_profile = benchmark.config.get(benchmark.id, 'profile')
         prof_item = benchmark.get_item(current_profile)
+        profile = None
         if prof_item == None:
             self.log.error("Import failed: profile '%(prof)s' does not exist" % {'prof':current_profile})
+            for prof in benchmark.get_profiles():
+                if prof.id == current_profile:
+                    self.log.error("wtf found profile %s" % (current_profile,))
+                    profile = prof
+                    break
+        else:
+            profile = prof_item.to_profile()
+
+        if profile == None:
+            self.log.error("profile not found")
             return None
 
-        profile = prof_item.to_profile()
         prof_sel = get_profile_selections(benchmark, profile)
         for key,val in prof_sel.items():
             benchmark.selections[key] = val
@@ -309,7 +322,9 @@ class Secstate:
                 benchmark.config.set(id, 'selected', True)
 
                 for oval in list(set(oval_files)):
-                    shutil.copy(os.path.join(oval_path, oval), directory)
+                    oval_file = os.path.join(oval_path, oval)
+                    if os.path.exists(oval_file):
+                        shutil.copy(oval_file, directory)
 
                 puppet_dir = self.config.get('secstate', 'puppet_dir')
                 if not os.path.isdir(puppet_dir):

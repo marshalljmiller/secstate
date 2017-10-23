@@ -121,7 +121,7 @@ def evaluate_xccdf(benchmark, url_XCCDF, s_profile=None, all=False, verbose=Fals
     title = oscap.common.text_new()
     title.text = "Secstate Audit Result"
     ritem.add_title(title)
-    ritem.start_time = time.time()
+    ritem.start_time = str(time.time())
     if policy != None:
         if policy.profile != None:
             ritem.set_profile(policy.profile.id)
@@ -148,7 +148,7 @@ def evaluate_xccdf(benchmark, url_XCCDF, s_profile=None, all=False, verbose=Fals
             rule_res.add_override(override)
             rule_res.result = override.new_result
 
-    ritem.end_time = time.time()
+    ritem.end_time = str(time.time())
 
     print "--Results for '%(id)s' (Profile: '%(prof)s')--" % {'id':benchmark.id, 'prof':s_profile}
     print "Passed:\t\t%(pass)s\n" \
@@ -241,7 +241,8 @@ def export_xml(results_dir, id, benchmark=None, sessions=None):
             id = os.path.splitext(os.path.basename(sess.filename))[0]
 
             oval_xml = os.path.join(results_dir, id + ".results.xml")
-            res_direct = oscap.oval.result_directives(res_model)
+            res_direct = res_model.directives_model
+            '''
             res_direct.set_reported(oscap.oval.OVAL_RESULT_TRUE |
                                     oscap.oval.OVAL_RESULT_FALSE |
                                     oscap.oval.OVAL_RESULT_UNKNOWN |
@@ -250,6 +251,7 @@ def export_xml(results_dir, id, benchmark=None, sessions=None):
                                     oscap.oval.OVAL_RESULT_NOT_APPLICABLE, True)
             res_direct.set_content(oscap.oval.OVAL_RESULT_FALSE, oscap.oval.OVAL_DIRECTIVE_CONTENT_FULL)
             res_direct.set_content(oscap.oval.OVAL_RESULT_TRUE, oscap.oval.OVAL_DIRECTIVE_CONTENT_FULL)
+            '''
             res_model.export(res_direct, oval_xml)
         
     return True
